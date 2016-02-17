@@ -1417,6 +1417,10 @@ class Content(Body):
             l.append('\\begin{em}')
         
         l.append(self.content)
+        
+        # add middle content 
+        for b in self.body:
+            l.extend(b._tex())
 
         if self.italic:
             l.append('\\end{em}')

@@ -1542,6 +1542,8 @@ class Environment(Body):
         
         options (str): string to paste into options field in Latex 
                        begin{name}{options} tag
+            
+        tight (bool): If true, shrink the space between lines
     
     Latex Dependencies 
         None: No special Latex packages required for this object
@@ -1550,13 +1552,15 @@ class Environment(Body):
     
     def __init__(   self, 
                     name, 
-                    options=[]):
+                    options=[],
+                    tight=False):
                     
         # call parent class constructor
         Body.__init__(self)
         
         self.name = name
         self.options = options
+        self.tight = tight
         
         return    
     
@@ -1571,6 +1575,10 @@ class Environment(Body):
         tag = '\n\\begin{' + self.name + '}' 
         for o in self.options:
             tag += '{' + o + '}'
+        
+        if self.tight:
+            tag += '\setlength{\parskip}{0cm} '    
+            
         tag += '\n'    
         l.append(tag)
             

@@ -1857,9 +1857,7 @@ class _List(Body):
     
         # add middle content 
         for b in self.body:
-            for s in b._tex():
-                l.append('\\item ' + s + '\n')
-    
+            l.append('\\item ' + ''.join(b._tex()) + '\n')
         
         # end the environment 
         footer = '\\end{' + self.type + '}\n'

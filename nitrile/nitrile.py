@@ -1366,6 +1366,10 @@ class Content(Body):
         postnewlines (int): Number of newlines to suffix this Content
         
         noindent (bool): If true, add a \\\\noindent tag before Content
+        
+        flatten (bool): If true, all children objects will be flattened into a 
+                        single string with this objects content instead of 
+                        being returned as multiple strings
     
     Latex Dependencies 
         None: No special Latex packages required for this object
@@ -1379,7 +1383,8 @@ class Content(Body):
                     italic=False,
                     prenewlines=0,
                     postnewlines=0,
-                    noindent=False):
+                    noindent=False,
+                    flatten=False):
                     
         # call parent class constructor
         Body.__init__(self)
@@ -1389,6 +1394,7 @@ class Content(Body):
         self.prenewlines = prenewlines
         self.postnewlines = postnewlines
         self.noindent = noindent
+        self.flatten = flatten
                 
         # convert passed in text into latex safe escape sequences
         if convert:
@@ -1416,12 +1422,25 @@ class Content(Body):
         
         if self.italic:
             l.append('\\begin{em}')
+                
+        # If we want to flatten all children,
+        # then get a list of all the children strings, join them, and then 
+        # just append them to the self.content string 
+        if self.flatten:
+            sublist = []
+            for b in self.body:
+                sublist.extend(b._tex())                
+            l.append(self.content + ''.join(sublist))
+
+        else:
+            # If we are not flattening the children,
+            # just add the self content as a list item
+            # and then add the middle content as seperate list items
+            l.append(self.content)
         
-        l.append(self.content)
-        
-        # add middle content 
-        for b in self.body:
-            l.extend(b._tex())
+            # add middle content 
+            for b in self.body:
+                l.extend(b._tex())
 
         if self.italic:
             l.append('\\end{em}')

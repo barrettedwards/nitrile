@@ -1606,7 +1606,7 @@ class Chapter(Body):
         # call parent class constructor
         Body.__init__(self)
         
-        self.title = title
+        self.title = unicode_to_latex(title)
         self.clearpage = clearpage
         self.cleardoublepage = cleardoublepage
         self.numbered = numbered

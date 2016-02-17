@@ -1446,8 +1446,8 @@ class Tag(Body):
     Args:
         name (str): This is the name of the tag
         
-        options (str): string to paste into options field in Latex 
-                       \\\\name{options}
+        options (list): List of strings to paste into options field in Latex 
+                       \\\\name{option1}{option2}
                        
         prenewlines (int): Number of newlines to prefix this Tag
         
@@ -1485,11 +1485,11 @@ class Tag(Body):
             l.append('\n')
         
         # Begin the environment
-        tag = '\\' + self.name 
-        if self.options is not None:
-            tag += '{' + self.options + '}'
+        tag = u'\\' + self.name 
+        for o in self.options:
+            tag += '{' + o + '}'
         l.append(tag)
-    
+        
         for i in range(self.postnewlines):
             l.append('\n')
     

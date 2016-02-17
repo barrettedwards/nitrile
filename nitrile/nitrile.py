@@ -1251,7 +1251,7 @@ class Command():
     
     def __init__(   self, 
                     name, 
-                    options=None):
+                    options=[]):
                     
         self.name = name
         self.options = options
@@ -1460,7 +1460,7 @@ class Tag(Body):
     
     def __init__(   self, 
                     name, 
-                    options=None,
+                    options=[],
                     prenewlines=0,
                     postnewlines=0):
                     

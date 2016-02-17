@@ -1165,7 +1165,7 @@ class _DocumentClass():
     """
     def __init__(   self, 
                     classname, 
-                    options=None):
+                    options=[]):
                     
         self.supported_classes = ['article', 'report', 'book']
         self.classname = classname
@@ -1225,7 +1225,7 @@ class Package():
         
         s = u'\\usepackage'
         if self.options is not None:
-            s = s + u'[' + u','.join(self.options) + u']'
+            s += u'[' + u','.join(self.options) + u']'
         s = s + '{%s}\n' % self.name
         
         return s
@@ -1531,7 +1531,7 @@ class Environment(Body):
     
     def __init__(   self, 
                     name, 
-                    options=None):
+                    options=[]):
                     
         # call parent class constructor
         Body.__init__(self)
@@ -1549,18 +1549,16 @@ class Environment(Body):
         l = []
         
         # Begin the environment
-        start = '\n\\begin{' + self.name + '}' 
-        if self.options is not None:
-            start += '{' + self.options + '}'
-        start += '\n'    
-        l.append(start)
-    
-        
+        tag = '\n\\begin{' + self.name + '}' 
+        for o in self.options:
+            tag += '{' + o + '}'
+        tag += '\n'    
+        l.append(tag)
+            
         # add middle content 
         for b in self.body:
             l.extend(b._tex())
-    
-        
+            
         # end the environment 
         end = '\n\\end{' + self.name + '}\n'
         l.append(end)

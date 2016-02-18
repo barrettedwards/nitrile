@@ -889,7 +889,7 @@ class Document():
         return item
         
     def pdf(    self, 
-                filepath=None, 
+                filename=None, 
                 force=False, 
                 open_when_done=False):
         """Convert Document into a PDF file
@@ -905,7 +905,7 @@ class Document():
         review or save to a new location. 
         
         Args:
-            filepath (string): The filepath for the output PDF file. This can
+            filename (string): The filename for the output PDF file. This can
                                be a relative or absolute directory name 
                                (./path/to/dir/, or /path/to/dir/), a filename
                                (output.pdf) or a relative or absolute filepath
@@ -985,7 +985,8 @@ class Document():
         # if sepcified filepath is a file name, check if it exists before 
         # overwriting
         # if file already exists, check force parameter before overwriting
-        if filepath is not None:
+        if filename is not None:
+            filepath = os.path.expanduser(filename)
             if os.path.isdir(filepath):
                 src = pdf_filepath
                 dst = os.path.join(filepath,pdf_filename)
@@ -1008,8 +1009,8 @@ class Document():
                     pdf_filepath = dst       
                 
         # STEP 8
-        # Open the PDF if requested or if no filename was provided 
-        if open_when_done or filepath is None:
+        # Open the PDF if requested
+        if open_when_done:
             if sys.platform.startswith('darwin'):
                 subprocess.call(('open', pdf_filepath))
             elif os.name == 'nt':
@@ -1026,7 +1027,7 @@ class Document():
         return  
     
     def tex(    self, 
-                filepath=None, 
+                filename=None, 
                 force=False, 
                 open_when_done=False):
         """Convert Document into a latex string 
@@ -1042,7 +1043,7 @@ class Document():
         for the user to review or save to a new location. 
         
         Args:
-            filepath (string): The filepath for the output .tex file. This can
+            filename (string): The filename for the output .tex file. This can
                                be a relative or absolute directory name
                                (./path/to/dir/, or /path/to/dir/), a filename
                                (output.tex) or a relative or absolute filepath
@@ -1096,8 +1097,8 @@ class Document():
         tex = u''.join(l)
         
         # if a filename was passed then write out the tex to a file
-        if filepath is not None:
-            filepath = os.path.expanduser(filepath)
+        if filename is not None:
+            filepath = os.path.expanduser(filename)
             if os.path.exists(filepath) and not force:
                 print "Error: file exists:", filepath
             else:
@@ -1114,7 +1115,7 @@ class Document():
         
         # if the user didn't pass a filename but wants to open the tex,
         # then write out the tex to a temp file and open it
-        if filepath is None and open_when_done:
+        if filename is None and open_when_done:
             # create temp directory
             temp_dirpath = tempfile.mkdtemp()
             
@@ -2522,7 +2523,7 @@ class SelfTest():
         # Generate output files 
         # generate tex file
         if self.args['tex']:
-            tex = d.tex(    filepath=self.args['filename'], 
+            tex = d.tex(    filename=self.args['filename'], 
                             open_when_done=self.args['open'], 
                             force=self.args['force'])
         
@@ -2531,7 +2532,7 @@ class SelfTest():
                 
         # generate PDF
         if self.args['pdf']:
-            d.pdf(  filepath=self.args['filename'], 
+            d.pdf(  filename=self.args['filename'], 
                     open_when_done=self.args['open'], 
                     force=self.args['force'])
                             

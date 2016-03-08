@@ -1168,7 +1168,8 @@ class _DocumentClass():
                     classname, 
                     options=[]):
                     
-        self.supported_classes = ['article', 'report', 'book']
+        self.supported_classes = ['article', 'report', 'book', 'extreport',
+                                  'extarticle']
         self.classname = classname
         self.options = options
         

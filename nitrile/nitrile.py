@@ -855,6 +855,11 @@ class Document():
         self.commands = []        
         self.body = []
         
+        # need to include this for underlines that will break across lines
+        # this pacakge is needed for Content()
+        self.add(Package('ulem', options=['normalem']))
+
+
         return        
         
     def add(    self, 
@@ -1362,6 +1367,8 @@ class Content(Body):
         bold (bool): If true, cause passed in text to be bolded.
         
         italic (bool): If true, cause passed in text to be italicized.
+
+        underline (bool): If true, cause passed in text to be underlined.
         
         prenewlines (int): Number of newlines to prefix this Content
         
@@ -1383,6 +1390,7 @@ class Content(Body):
                     convert=True, 
                     bold=False, 
                     italic=False,
+                    underline=False,
                     prenewlines=0,
                     postnewlines=0,
                     noindent=False,
@@ -1393,6 +1401,7 @@ class Content(Body):
         
         self.bold = bold
         self.italic = italic
+        self.underline = underline
         self.prenewlines = prenewlines
         self.postnewlines = postnewlines
         self.noindent = noindent
@@ -1419,6 +1428,9 @@ class Content(Body):
         if self.noindent:
             l.append('\\noindent ')
         
+        if self.underline:
+            l.append('\\uline{')
+
         if self.bold:
             l.append('\\begin{bf}')
         
@@ -1449,6 +1461,9 @@ class Content(Body):
         
         if self.bold:
             l.append('\\end{bf}')
+
+        if self.underline:
+            l.append('}')
 
         for i in range(self.postnewlines):
             l.append('\n')
@@ -2644,6 +2659,11 @@ class SelfTest():
         d.add(Content('This content should be italic.', 
                       italic=True, 
                       postnewlines=2))
+
+        d.add(Content('This content should be underlined.', 
+                      underline=True, 
+                      postnewlines=2))
+
                             
         return d 
             
